@@ -43,5 +43,13 @@ jobs:
       - name: Run tests with Jacoco
         run: ./gradlew jacocoTestReport
 
+<<<<<<< HEAD
       - name: Upload Jacoco code coverage and run SonarCloud analysis
         run: ./gradlew sonarqube -Dsonar.projectKey=bhos-qa_lab-3-Aykhan064 -Dsonar.organization=bhos-qa -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONARCLOUD_TOKEN }}
+=======
+      - name: Upload coverage to SonarCloud
+        run: ./gradlew sonarqube
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+>>>>>>> 1264952de08eab423836c8df53d254bc66aa9599
