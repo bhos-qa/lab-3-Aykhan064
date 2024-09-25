@@ -1,6 +1,9 @@
-name: Kotlin CI
+name: CI - AK
 
 on:
+  push:
+    branches:
+      - feature/lab3
   pull_request:
     branches:
       - develop
@@ -13,11 +16,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK 11
+      - name: Set up JDK 21
         uses: actions/setup-java@v1
         with:
-          java-version: '11'
-          distribution: 'adopt'  
+          distribution: 'adopt'
+          java-version: '21'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
 
       - name: Build with Gradle
         run: ./gradlew build
@@ -25,11 +40,8 @@ jobs:
       - name: Run tests
         run: ./gradlew test
 
-      - name: Generate Code Coverage Report
+      - name: Run tests with Jacoco
         run: ./gradlew jacocoTestReport
 
-      - name: Upload coverage to SonarCloud
-        run: ./gradlew sonarqube
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
+      - name: Upload Jacoco code coverage and run SonarCloud analysis
+        run: ./gradlew sonarqube -Dsonar.projectKey=bhos-qa_lab-3-Aykhan064 -Dsonar.organization=bhos-qa -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONARCLOUD_TOKEN }}

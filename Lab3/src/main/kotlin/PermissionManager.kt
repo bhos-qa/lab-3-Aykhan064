@@ -12,4 +12,7 @@ class PermissionManager {
     fun setPermissionLevel(level: PermissionLevel) {
         mCurrentLevel = level
     }
+    fun getPermissionLevel(): PermissionLevel {
+        return mCurrentLevel
+    }
 }

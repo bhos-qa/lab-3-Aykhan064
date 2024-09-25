@@ -12,29 +12,19 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
-    implementation("com.google.guava:guava:31.0.1-jre")
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 tasks.test {
-    useJUnitPlatform()
-    testLogging {
-        events("passed", "failed", "skipped")
-    }
-    finalizedBy(tasks.jacocoTestReport)
+    finalizedBy(tasks.jacocoTestReport) // Run jacocoTestReport after test
 }
 
 tasks.jacocoTestReport {
-    dependsOn(tasks.test)
     reports {
         xml.required.set(true)
         html.required.set(true)
     }
-}
-
-kotlin {
-    jvmToolchain(21)
 }
 
 jacoco {
@@ -44,9 +34,8 @@ jacoco {
 sonarqube {
     properties {
         property("sonar.projectKey", "lab-3-Aykhan064")
-        property("sonar.projectName", "lab-3-Aykhan064")
+        property( "sonar.organization", "bhos-qa")
         property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.sourceEncoding", "UTF-8")
-        property("sonar.language", "kotlin")
+        property("sonar.login", project.findProperty("sonar.login") ?: "")
     }
 }
