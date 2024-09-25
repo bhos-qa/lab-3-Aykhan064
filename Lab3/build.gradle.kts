@@ -18,8 +18,8 @@ dependencies {
 tasks.jacocoTestReport {
     dependsOn(tasks.test) 
     reports {
-        xml.required.set(true) // Generate XML report
-        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml")) // Generate HTML report
+        xml.required.set(true) 
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
 }
 
