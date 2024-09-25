@@ -5,8 +5,7 @@ on:
     branches:
       - feature/lab3
   pull_request:
-    branches:
-      - develop
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
@@ -22,28 +21,18 @@ jobs:
           distribution: 'adopt'
           java-version: '21'
 
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle
-
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Run tests
-        run: ./gradlew test
-
       - name: Run tests with Jacoco
-        run: ./gradlew jacocoTestReport
+        run: ./gradlew test jacocoTestReport
 
-      - name: Upload Jacoco code coverage and run SonarCloud analysis
-        run: ./gradlew sonarqube -Dsonar.projectKey=bhos-qa_lab-3-Aykhan064 -Dsonar.organization=bhos-qa -Dsonar.host.url=https://sonarcloud.io
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@v3.0.0
+        with:
+            projectBaseDir: '.'
         env:
-          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+            SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
