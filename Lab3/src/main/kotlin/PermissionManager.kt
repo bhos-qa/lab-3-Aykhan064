@@ -1,18 +1,11 @@
 class PermissionManager {
     private var mCurrentLevel: PermissionLevel = PermissionLevel.USER
 
-    fun getRoleName(level: PermissionLevel): String {
-        return when (level) {
-            PermissionLevel.ADMIN -> "Admin"
-            PermissionLevel.DEVELOPER -> "Developer"
-            PermissionLevel.USER -> "User"
-        }
+    fun getRoleName(): String {
+        return mCurrentLevel.name
     }
 
-    fun setPermissionLevel(level: PermissionLevel) {
+    fun setRoleName(level: PermissionLevel) {
         mCurrentLevel = level
-    }
-    fun getPermissionLevel(): PermissionLevel {
-        return mCurrentLevel
     }
 }
